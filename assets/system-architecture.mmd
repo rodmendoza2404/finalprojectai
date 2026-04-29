@@ -1,0 +1,13 @@
+flowchart TD
+    A[User Query in CLI] --> B[src/main.py]
+    B --> C[src/rag_engine.py: rag_recommend]
+    C --> D[Claude Parse Step: parse_query]
+    D --> E[Structured Preferences JSON]
+    E --> F[src/recommender.py: recommend_songs]
+    F --> G[Top-k Retrieved Songs]
+    G --> H{Guardrail\nTop score >= 1.5?}
+    H -- No --> I[Return no_match + guidance]
+    H -- Yes --> J[Claude Generation Step: generate_recommendation]
+    J --> K[Grounded explanation using retrieved songs only]
+    I --> L[CLI output]
+    K --> L[CLI output]
