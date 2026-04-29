@@ -47,6 +47,24 @@ Output: ranked list + grounded explanation
 
 ## 🏗️ System Architecture
 
+Architecture diagram file: `assets/system-architecture.mmd`
+
+```mermaid
+flowchart TD
+        A[User Query in CLI] --> B[src/main.py]
+        B --> C[src/rag_engine.py: rag_recommend]
+        C --> D[Claude Parse Step: parse_query]
+        D --> E[Structured Preferences JSON]
+        E --> F[src/recommender.py: recommend_songs]
+        F --> G[Top-k Retrieved Songs]
+        G --> H{Guardrail\nTop score >= 1.5?}
+        H -- No --> I[Return no_match + guidance]
+        H -- Yes --> J[Claude Generation Step: generate_recommendation]
+        J --> K[Grounded explanation using retrieved songs only]
+        I --> L[CLI output]
+        K --> L[CLI output]
+```
+
 ```
 music-recommender-ai/
 ├── data/
@@ -200,7 +218,32 @@ The retrieval logic (pure Python) is testable without any API calls. This separa
 
 ## 📹 Demo Walkthrough
 
-> [Loom video link — add before submission]
+Loom walkthrough (end-to-end system run):
+
+https://www.loom.com/share/43b310fce87644bca45bf5c8e618824f
+
+The demo covers:
+1. A successful chill/focus query
+2. A successful high-energy query
+3. A low-specificity query that triggers the guardrail
+
+---
+
+## ✅ Submission + Rubric Alignment
+
+1. Base project identification and scope: documented at the top of this README under Base Project.
+2. Substantial AI feature: implemented RAG pipeline with two Claude calls, grounded generation, and a confidence guardrail.
+3. System architecture diagram: embedded above and also stored in `assets/system-architecture.mmd`.
+4. End-to-end system: runnable via `python -m src.main` with sample interactions shown.
+5. Reliability/evaluation: confidence-threshold guardrail + eval harness in `tests/eval_harness.py`.
+6. Documentation quality: setup, run, test steps and sample I/O are included in this README.
+7. Reflection quality: detailed collaboration, limitations, and future improvements are documented in `model_card.md`.
+8. Organized assets: diagrams/screenshots are kept under `assets/`.
+
+Final checks before submission:
+1. Confirm the GitHub repository visibility is Public.
+2. Ensure final commits are pushed to origin/main.
+3. Keep secrets out of git (`.env` is ignored).
 
 ---
 
